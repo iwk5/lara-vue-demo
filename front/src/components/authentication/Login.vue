@@ -3,20 +3,20 @@
         <div class="row justify-content-center align-items-center h-100">
             <div class="col-md-6">
                 <!-- Start form -->
-                <form class="login-form">
+                <div class="login-form">
                     <div class="form-group">
                         <label>Email address</label>
-                        <input v-model="email" type="email" class="form-control" id="email" aria-describedby="emailHelp" placeholder="Enter email">
+                        <input v-model="email" type="email" class="form-control" placeholder="Enter email">
                     </div>
                     <div class="form-group">
                         <label>Password</label>
-                        <input v-model="password" type="password" class="form-control" name="password" id="password" placeholder="Password">
+                        <input v-model="password" type="password" class="form-control" placeholder="Password">
                     </div>
                     <div class="form-check">
-                        <button type="submit" class="btn btn-primary">Login</button>
+                        <button @click="login" class="btn btn-primary">Login</button>
                     </div>
 
-                </form>
+                </div>
                 <!-- End form -->
             </div>
 
@@ -29,6 +29,28 @@
             return {
                 email:'',
                 password:''
+            }
+        },
+        methods:{
+            login(){
+                var data= {
+                    client_id:2,
+                    client_secret:'WD8pLWtHcnYtal4usb3Ht29D8uKfFnxHQbUgxi5s',
+                    grant_type:'password',
+                    username:this.email,
+                    password:this.password
+                }
+                this.$http.post('oauth/token',data).then(
+                    response => {
+                        this.$auth.setToken(response.body.access_token,response.body.expires_in+Date.now())
+                        this.$router.push('/feed')
+                        //console.log(response)
+                    }
+                    /*function (res) {
+                    console.log(res)
+                }*/
+
+                )
             }
         }
     }
